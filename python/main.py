@@ -13,11 +13,11 @@ db = client['arduino']  # Nome do banco de dados
 
 
 # Função para buscar dados e exibi-los em uma tabela em uma nova janela
-def exibir_tabela_sala():
-    collection = db['sala']
+def exibir_tabela_masculina():
+    collection = db['masculina']
     
     nova_janela = tk.Toplevel()
-    nova_janela.title("Tabela de Movimentação na sala")
+    nova_janela.title("Tabela de Movimentação na sessão masculina")
     
     # Criar um widget Treeview com colunas 'Data' e 'Hora'
     tree = ttk.Treeview(nova_janela, columns=('Data', 'Hora'), show='headings')
@@ -34,22 +34,10 @@ def exibir_tabela_sala():
         tree.insert('', tk.END, values=(data, hora))
 
 
-def exibir_grafico_sala():
+def exibir_grafico():
     collection = db['sala']
-  
-    nova_janela = tk.Toplevel()
-    nova_janela.title("Gráfico")
 
-    # Criar um widget Treeview
-    tree = ttk.Treeview(nova_janela, columns=('Nome', 'Idade'), show='headings')
-    tree.heading('Nome', text='Nome')
-    tree.heading('Idade', text='Idade')
-    tree.pack(fill=tk.BOTH, expand=True)
-
-    # Buscar dados do MongoDB
-    usuarios = list(collection.find({}, {'_id': 0}))
-    for usuario in usuarios:
-        tree.insert('', tk.END, values=(usuario['nome'], usuario['idade']))
+    
 
 # Função para criar a interface gráfica
 def cria_tela():

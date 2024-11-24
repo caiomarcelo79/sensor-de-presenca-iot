@@ -28,7 +28,8 @@ def exibir_tabela_via_http(sessao):
             mov = dado.get('mov', 'N/A')  # Movimentação registrada
             if 'timestamp' in dado:
                 try:
-                    timestamp = datetime.strptime(dado['timestamp'], '%a, %d %b %Y %H:%M:%S %Z')
+                    # Tentar interpretar o timestamp no formato ISO 8601
+                    timestamp = datetime.fromisoformat(dado['timestamp'].replace("Z", "+00:00"))
                     data = timestamp.strftime('%d/%m/%Y')
                     hora = timestamp.strftime('%H:%M:%S')
                 except ValueError:
@@ -55,7 +56,7 @@ def gerar_grafico_pizza_http():
             # Filtrar movimentações da última semana
             visitas[sessao.capitalize()] = sum(
                 1 for dado in dados if 'timestamp' in dado and
-                datetime.strptime(dado['timestamp'], '%a, %d %b %Y %H:%M:%S %Z') >= inicio_semana
+                datetime.fromisoformat(dado['timestamp'].replace("Z", "+00:00")) >= inicio_semana
             )
 
         # Gerar gráfico de pizza
@@ -72,6 +73,9 @@ def gerar_grafico_pizza_http():
 
     except requests.exceptions.RequestException as e:
         messagebox.showerror("Erro", f"Falha ao obter dados para o gráfico. Detalhes: {e}")
+    except ValueError as e:
+        messagebox.showerror("Erro", f"Falha ao processar datas. Detalhes: {e}")
+
 
 # Função para criar a interface gráfica
 def cria_tela():

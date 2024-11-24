@@ -36,12 +36,16 @@ def getMovimentacoes(sessao):
     collection = db[sessao]
 
     try:
-        movimentacoes = collection.find()
+        # Busca movimentações e ordena por timestamp (1 para ordem crescente)
+        movimentacoes = collection.find().sort('timestamp', -1)
         movimentacoes_list = []
 
         for mov in movimentacoes:
             # Converte _id do MongoDB para string
             mov['_id'] = str(mov['_id'])
+            # Formata o timestamp para string legível
+            if 'timestamp' in mov:
+                mov['timestamp'] = mov['timestamp'].strftime('%Y-%m-%dT%H:%M:%S')
             movimentacoes_list.append(mov)
 
         return jsonify(movimentacoes_list), 200
